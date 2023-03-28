@@ -7,6 +7,7 @@ env:
   REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
   REPO_BRANCH: v21.02.5
   CONFIG_FILE: config-openwrt/v21.02.5/armvirt64.config
+  PATCH_FILE: patch/*
 
 jobs:
   build:
@@ -24,7 +25,7 @@ jobs:
       - name: Load custom configuration
         run: |
           cp -f ${CONFIG_FILE} openwrt/.config
-          cat openwrt/.config
+          cp -f ${PATCH_FILE} openwrt/package/kernel/linux/modules/
           
       - name: Update feeds
         run: cd openwrt/ && ./scripts/feeds update -a
