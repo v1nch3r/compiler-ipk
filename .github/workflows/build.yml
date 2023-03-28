@@ -38,11 +38,15 @@ jobs:
           make defconfig
           make download -j $(nproc)          
        
-      - name: Compile the firmware
+      - name: Compile the toolchain
         run: |
           cd openwrt/
-          make -j $(nproc) V=w
+          make toolchain/compile -j$(nproc) V=w
       
+      - name: Compile package
+        run: |
+          make package/kernel/linux/compile -j$(nproc) V=w
+          
       - name: Upload OpenWrt Firmware to Release
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
