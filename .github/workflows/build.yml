@@ -64,6 +64,6 @@ jobs:
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
           tag: Openwrt-Armvirt
-          artifacts: "openwrt/bin/targets/armvirt/64/*"
+          artifacts: "openwrt/bin/targets/armvirt/64/packages/*"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
