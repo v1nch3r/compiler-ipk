@@ -52,7 +52,7 @@ jobs:
       - name: Compile the kernel
         run: |
           cd openwrt/
-          make target/linux/armvirt/compile -j$(nproc) V=w
+          make target/linux/compile -j$(nproc) V=w
       
       - name: Compile package
         run: |
