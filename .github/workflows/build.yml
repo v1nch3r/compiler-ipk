@@ -37,12 +37,22 @@ jobs:
         run: |
           cd openwrt/
           make defconfig
-          make download -j $(nproc)          
+          make download -j $(nproc)
+          
+      - name: Compile the tools
+        run: |
+          cd openwrt/
+          make tools/compile -j$(nproc) V=w
        
       - name: Compile the toolchain
         run: |
           cd openwrt/
           make toolchain/compile -j$(nproc) V=w
+      
+      - name: Compile the kernel
+        run: |
+          cd openwrt/
+          make target/linux/armvirt/compile -j$(nproc) V=w
       
       - name: Compile package
         run: |
