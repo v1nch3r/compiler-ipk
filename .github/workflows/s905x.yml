@@ -7,7 +7,7 @@ env:
   REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
   REPO_BRANCH: v21.02.5
   CONFIG_FILE: config-openwrt/v21.02.5/armvirt64.config
-  PATCH_FILE: patch/*
+  PATCH_FILE: patch/21.02.5/netsupport.mk
 
 jobs:
   build:
