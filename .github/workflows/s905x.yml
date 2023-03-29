@@ -1,4 +1,4 @@
-name: compiler-ipk
+name: compiler-s905x
 
 on:
   workflow_dispatch:
@@ -59,11 +59,11 @@ jobs:
           cd openwrt/
           make package/kernel/linux/compile -j$(nproc) V=w
           
-      - name: Upload OpenWrt Firmware to Release
+      - name: Upload Package to Releases
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
-          tag: Openwrt-Armvirt
+          tag: 21.02.5-s905x
           artifacts: "openwrt/bin/targets/armvirt/64/packages/*"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
