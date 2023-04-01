@@ -56,14 +56,16 @@ jobs:
       
       - name: Compile package
         run: |
+          mkdir -p packed
           cd openwrt/
           make package/kernel/linux/compile -j$(nproc) V=w
+          find bin/ -type f -name '*.ipk' -exec mv -t ../packed {} +
           
       - name: Upload Package to Releases
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
           tag: 21.02.5-x86_64
-          artifacts: "openwrt/bin/targets/armvirt/64/packages/*"
+          artifacts: "packed/*"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
