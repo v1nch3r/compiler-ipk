@@ -1,0 +1,69 @@
+name: compiler-x86_64
+
+on:
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
+  REPO_BRANCH: v21.02.5
+  CONFIG_FILE: config-openwrt/v21.02.5/x86_64.config
+  PATCH_FILE: patch/21.02.5/netsupport.mk
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Clone source code
+        run: |
+          git clone ${REPO_URL} -b ${REPO_BRANCH}
+      
+      - name: Load custom configuration
+        run: |
+          cp -f ${CONFIG_FILE} openwrt/.config
+          cp -f ${PATCH_FILE} openwrt/package/kernel/linux/modules/
+          
+      - name: Update feeds
+        run: cd openwrt/ && ./scripts/feeds update -a
+      
+      - name: Install feeds
+        run: cd openwrt/ && ./scripts/feeds install -a
+        
+      - name: Download package
+        run: |
+          cd openwrt/
+          make defconfig
+          make download -j$(nproc)
+          
+      - name: Compile the tools
+        run: |
+          cd openwrt/
+          make tools/compile -j$(nproc) V=w
+       
+      - name: Compile the toolchain
+        run: |
+          cd openwrt/
+          make toolchain/compile -j$(nproc) V=w
+      
+      - name: Compile the kernel
+        run: |
+          cd openwrt/
+          make target/linux/compile -j$(nproc) V=w
+      
+      - name: Compile package
+        run: |
+          cd openwrt/
+          make package/kernel/linux/compile -j$(nproc) V=w
+          
+      - name: Upload Package to Releases
+        uses: ncipollo/release-action@main
+        if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
+        with:
+          tag: 21.02.5-x86_64
+          artifacts: "openwrt/bin/targets/armvirt/64/packages/*"
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
