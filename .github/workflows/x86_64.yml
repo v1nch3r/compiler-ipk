@@ -5,9 +5,9 @@ on:
 
 env:
   REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
-  REPO_BRANCH: v21.02.5
-  CONFIG_FILE: config-openwrt/v21.02.5/x86_64.config
-  PATCH_FILE: patch/21.02.5/netsupport.mk
+  REPO_BRANCH: v21.02.6
+  CONFIG_FILE: config-openwrt/v21.02.6/x86_64.config
+  PATCH_FILE: patch/21.02.6/netsupport.mk
 
 jobs:
   build:
@@ -65,7 +65,7 @@ jobs:
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
-          tag: 21.02.5-x86_64
+          tag: 21.02.6-x86_64
           artifacts: "packed/*"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
